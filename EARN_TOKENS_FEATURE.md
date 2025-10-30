@@ -55,7 +55,7 @@ The Earn Tokens feature allows users to earn free tokens through alternative met
 1. Create a Discord Application at https://discord.com/developers/applications
 2. Add a bot to your application
 3. Copy the Client ID, Client Secret, and Bot Token
-4. Set the OAuth2 redirect URL to: `https://yourdomain.com/panel?routeName=earn_tokens_discord_callback`
+4. Set the OAuth2 redirect URL to: `https://yourdomain.com/earn-tokens/discord/callback`
 5. Enable the following OAuth2 scopes: `identify`, `guilds.join`
 6. Add the bot to your Discord server with appropriate permissions
 

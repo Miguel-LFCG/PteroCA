@@ -80,10 +80,15 @@
                             <button type="button" class="btn btn-secondary w-100" disabled>
                                 <i class="fas fa-check me-2"></i>{{ 'pteroca.earn_tokens.already_claimed'|trans }}
                             </button>
-                        {% else %}
+                        {% elseif discord_client_id and discord_server_id %}
                             <a href="#" class="btn btn-info w-100" id="discord-join-btn">
                                 <i class="fab fa-discord me-2"></i>{{ 'pteroca.earn_tokens.join_server'|trans }}
                             </a>
+                        {% else %}
+                            <button type="button" class="btn btn-secondary w-100" disabled>
+                                <i class="fab fa-discord me-2"></i>{{ 'pteroca.earn_tokens.join_server'|trans }}
+                            </button>
+                            <small class="text-muted mt-2 d-block text-center">Discord not configured</small>
                         {% endif %}
                     </div>
                 </div>
