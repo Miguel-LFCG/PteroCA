@@ -25,7 +25,7 @@ class EarnTokensController extends AbstractController
 
         if (!$this->tokenEarningService->isTokenEarningEnabled()) {
             $this->addFlash('danger', $this->translator->trans('pteroca.earn_tokens.feature_disabled'));
-            return $this->redirectToRoute('panel', ['routeName' => 'recharge_balance']);
+            return $this->redirectToRoute('recharge_balance');
         }
 
         $user = $this->getUser();
@@ -131,7 +131,7 @@ class EarnTokensController extends AbstractController
 
         if (!$this->tokenEarningService->isTokenEarningEnabled()) {
             $this->addFlash('danger', $this->translator->trans('pteroca.earn_tokens.feature_disabled'));
-            return $this->redirectToRoute('panel', ['routeName' => 'earn_tokens']);
+            return $this->redirectToRoute('earn_tokens');
         }
 
         $code = $request->query->get('code');
@@ -139,12 +139,12 @@ class EarnTokensController extends AbstractController
 
         if ($error) {
             $this->addFlash('danger', $this->translator->trans('pteroca.earn_tokens.discord_auth_failed'));
-            return $this->redirectToRoute('panel', ['routeName' => 'earn_tokens']);
+            return $this->redirectToRoute('earn_tokens');
         }
 
         if (!$code) {
             $this->addFlash('danger', $this->translator->trans('pteroca.earn_tokens.discord_invalid_code'));
-            return $this->redirectToRoute('panel', ['routeName' => 'earn_tokens']);
+            return $this->redirectToRoute('earn_tokens');
         }
 
         $user = $this->getUser();
@@ -152,7 +152,7 @@ class EarnTokensController extends AbstractController
         // Check if already claimed
         if ($this->tokenEarningService->hasClaimedDiscord($user)) {
             $this->addFlash('warning', $this->translator->trans('pteroca.earn_tokens.discord_already_claimed'));
-            return $this->redirectToRoute('panel', ['routeName' => 'earn_tokens']);
+            return $this->redirectToRoute('earn_tokens');
         }
 
         // In a real implementation, you would:
@@ -169,7 +169,7 @@ class EarnTokensController extends AbstractController
             $this->addFlash('danger', $this->translator->trans('pteroca.earn_tokens.claim_failed'));
         }
 
-        return $this->redirectToRoute('panel', ['routeName' => 'earn_tokens']);
+        return $this->redirectToRoute('earn_tokens');
     }
 
     #[Route('/earn-tokens/check-status', name: 'earn_tokens_check_status', methods: ['GET'])]

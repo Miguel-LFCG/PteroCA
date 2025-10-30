@@ -81,7 +81,7 @@
                                 <i class="fas fa-check me-2"></i>{{ 'pteroca.earn_tokens.already_claimed'|trans }}
                             </button>
                         {% else %}
-                            <a href="{{ discordOAuthUrl }}" class="btn btn-info w-100" id="discord-join-btn">
+                            <a href="#" class="btn btn-info w-100" id="discord-join-btn">
                                 <i class="fab fa-discord me-2"></i>{{ 'pteroca.earn_tokens.join_server'|trans }}
                             </a>
                         {% endif %}
@@ -124,7 +124,7 @@
         {% if discord_client_id and discord_server_id and not has_claimed_discord %}
         const discordOAuthUrl = 'https://discord.com/api/oauth2/authorize?' + new URLSearchParams({
             client_id: '{{ discord_client_id }}',
-            redirect_uri: '{{ url('panel', {routeName: 'earn_tokens_discord_callback'}) }}',
+            redirect_uri: '{{ url('earn_tokens_discord_callback') }}',
             response_type: 'code',
             scope: 'identify guilds.join',
             guild_id: '{{ discord_server_id }}'
@@ -148,7 +148,7 @@
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>{{ 'pteroca.earn_tokens.processing'|trans }}';
 
             try {
-                const response = await fetch('{{ path('panel', {routeName: 'earn_tokens_claim_ad'}) }}', {
+                const response = await fetch('{{ path('earn_tokens_claim_ad') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -179,7 +179,7 @@
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>{{ 'pteroca.earn_tokens.processing'|trans }}';
 
             try {
-                const response = await fetch('{{ path('panel', {routeName: 'earn_tokens_claim_task'}) }}', {
+                const response = await fetch('{{ path('earn_tokens_claim_task') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -206,7 +206,7 @@
 
         async function checkStatus() {
             try {
-                const response = await fetch('{{ path('panel', {routeName: 'earn_tokens_check_status'}) }}');
+                const response = await fetch('{{ path('earn_tokens_check_status') }}');
                 const data = await response.json();
 
                 updateBalance(data.balance);
