@@ -1,0 +1,250 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block title %}| {{ 'pteroca.earn_tokens.title'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid mt-4">
+        <!-- Header Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="bg-light rounded-3 p-4 mb-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success rounded-circle me-3">
+                                <i class="fas fa-coins p-3 text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-1 fw-bold">{{ 'pteroca.earn_tokens.title'|trans }}</h4>
+                                <p class="text-muted mb-0">{{ 'pteroca.earn_tokens.description'|trans }}</p>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <p class="mb-0 text-muted small">{{ 'pteroca.earn_tokens.current_balance'|trans }}</p>
+                            <h3 class="mb-0 fw-bold text-success" id="current-balance">{{ balance|number_format(2) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Watch Ad Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-4">
+                                <i class="fas fa-tv fa-3x text-primary"></i>
+                            </div>
+                        </div>
+                        <h5 class="card-title text-center mb-3">{{ 'pteroca.earn_tokens.watch_ad'|trans }}</h5>
+                        <p class="card-text text-center text-muted">
+                            {{ 'pteroca.earn_tokens.watch_ad_description'|trans }}
+                        </p>
+                        <div class="text-center mb-3">
+                            <span class="badge bg-primary fs-6">+{{ ad_amount|number_format(2) }} {{ 'pteroca.earn_tokens.tokens'|trans }}</span>
+                        </div>
+                        <p class="text-center text-muted small">
+                            <i class="fas fa-clock me-1"></i>
+                            {{ 'pteroca.earn_tokens.cooldown'|trans({'%minutes%': ad_cooldown}) }}
+                        </p>
+                        <button type="button" class="btn btn-primary w-100" id="claim-ad-btn" onclick="claimAdTokens()">
+                            <i class="fas fa-play me-2"></i>{{ 'pteroca.earn_tokens.watch_now'|trans }}
+                        </button>
+                        <div id="ad-status" class="mt-2 text-center small"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Join Discord Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex p-4">
+                                <i class="fab fa-discord fa-3x text-info"></i>
+                            </div>
+                        </div>
+                        <h5 class="card-title text-center mb-3">{{ 'pteroca.earn_tokens.join_discord'|trans }}</h5>
+                        <p class="card-text text-center text-muted">
+                            {{ 'pteroca.earn_tokens.join_discord_description'|trans }}
+                        </p>
+                        <div class="text-center mb-3">
+                            <span class="badge bg-info fs-6">+{{ discord_amount|number_format(2) }} {{ 'pteroca.earn_tokens.tokens'|trans }}</span>
+                        </div>
+                        <p class="text-center text-muted small">
+                            <i class="fas fa-star me-1"></i>
+                            {{ 'pteroca.earn_tokens.one_time_reward'|trans }}
+                        </p>
+                        {% if has_claimed_discord %}
+                            <button type="button" class="btn btn-secondary w-100" disabled>
+                                <i class="fas fa-check me-2"></i>{{ 'pteroca.earn_tokens.already_claimed'|trans }}
+                            </button>
+                        {% elseif discord_client_id and discord_server_id %}
+                            <a href="#" class="btn btn-info w-100" id="discord-join-btn">
+                                <i class="fab fa-discord me-2"></i>{{ 'pteroca.earn_tokens.join_server'|trans }}
+                            </a>
+                        {% else %}
+                            <button type="button" class="btn btn-secondary w-100" disabled>
+                                <i class="fab fa-discord me-2"></i>{{ 'pteroca.earn_tokens.join_server'|trans }}
+                            </button>
+                            <small class="text-muted mt-2 d-block text-center">Discord not configured</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete Task Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex p-4">
+                                <i class="fas fa-tasks fa-3x text-warning"></i>
+                            </div>
+                        </div>
+                        <h5 class="card-title text-center mb-3">{{ 'pteroca.earn_tokens.complete_task'|trans }}</h5>
+                        <p class="card-text text-center text-muted">
+                            {{ 'pteroca.earn_tokens.complete_task_description'|trans }}
+                        </p>
+                        <div class="text-center mb-3">
+                            <span class="badge bg-warning fs-6">+{{ task_amount|number_format(2) }} {{ 'pteroca.earn_tokens.tokens'|trans }}</span>
+                        </div>
+                        <p class="text-center text-muted small">
+                            <i class="fas fa-clock me-1"></i>
+                            {{ 'pteroca.earn_tokens.daily_reward'|trans }}
+                        </p>
+                        <button type="button" class="btn btn-warning w-100" id="claim-task-btn" onclick="claimTaskTokens()">
+                            <i class="fas fa-check-circle me-2"></i>{{ 'pteroca.earn_tokens.claim_reward'|trans }}
+                        </button>
+                        <div id="task-status" class="mt-2 text-center small"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Discord OAuth URL construction
+        {% if discord_client_id and discord_server_id and not has_claimed_discord %}
+        const discordOAuthUrl = 'https://discord.com/api/oauth2/authorize?' + new URLSearchParams({
+            client_id: '{{ discord_client_id }}',
+            redirect_uri: '{{ url('earn_tokens_discord_callback') }}',
+            response_type: 'code',
+            scope: 'identify guilds.join',
+            guild_id: '{{ discord_server_id }}'
+        });
+        document.getElementById('discord-join-btn').href = discordOAuthUrl;
+        {% endif %}
+
+        function updateBalance(newBalance) {
+            document.getElementById('current-balance').textContent = parseFloat(newBalance).toFixed(2);
+        }
+
+        function showMessage(elementId, message, isError = false) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = 'mt-2 text-center small ' + (isError ? 'text-danger' : 'text-success');
+        }
+
+        async function claimAdTokens() {
+            const btn = document.getElementById('claim-ad-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>{{ 'pteroca.earn_tokens.processing'|trans }}';
+
+            try {
+                const response = await fetch('{{ path('earn_tokens_claim_ad') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('ad-status', data.message, false);
+                    updateBalance(data.new_balance);
+                    setTimeout(() => checkStatus(), 2000);
+                } else {
+                    showMessage('ad-status', data.message, true);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-play me-2"></i>{{ 'pteroca.earn_tokens.watch_now'|trans }}';
+                }
+            } catch (error) {
+                showMessage('ad-status', '{{ 'pteroca.earn_tokens.error_occurred'|trans }}', true);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-play me-2"></i>{{ 'pteroca.earn_tokens.watch_now'|trans }}';
+            }
+        }
+
+        async function claimTaskTokens() {
+            const btn = document.getElementById('claim-task-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>{{ 'pteroca.earn_tokens.processing'|trans }}';
+
+            try {
+                const response = await fetch('{{ path('earn_tokens_claim_task') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('task-status', data.message, false);
+                    updateBalance(data.new_balance);
+                    setTimeout(() => checkStatus(), 2000);
+                } else {
+                    showMessage('task-status', data.message, true);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-check-circle me-2"></i>{{ 'pteroca.earn_tokens.claim_reward'|trans }}';
+                }
+            } catch (error) {
+                showMessage('task-status', '{{ 'pteroca.earn_tokens.error_occurred'|trans }}', true);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-circle me-2"></i>{{ 'pteroca.earn_tokens.claim_reward'|trans }}';
+            }
+        }
+
+        async function checkStatus() {
+            try {
+                const response = await fetch('{{ path('earn_tokens_check_status') }}');
+                const data = await response.json();
+
+                updateBalance(data.balance);
+
+                // Update ad button
+                const adBtn = document.getElementById('claim-ad-btn');
+                if (!data.ad_can_claim) {
+                    adBtn.disabled = true;
+                    showMessage('ad-status', data.ad_message, true);
+                } else {
+                    adBtn.disabled = false;
+                    adBtn.innerHTML = '<i class="fas fa-play me-2"></i>{{ 'pteroca.earn_tokens.watch_now'|trans }}';
+                    showMessage('ad-status', '', false);
+                }
+
+                // Update task button
+                const taskBtn = document.getElementById('claim-task-btn');
+                if (!data.task_can_claim) {
+                    taskBtn.disabled = true;
+                    showMessage('task-status', data.task_message, true);
+                } else {
+                    taskBtn.disabled = false;
+                    taskBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>{{ 'pteroca.earn_tokens.claim_reward'|trans }}';
+                    showMessage('task-status', '', false);
+                }
+            } catch (error) {
+                console.error('Error checking status:', error);
+            }
+        }
+
+        // Check status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkStatus();
+        });
+    </script>
+{% endblock %}

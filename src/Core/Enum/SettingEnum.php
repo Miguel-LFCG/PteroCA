@@ -55,4 +55,13 @@ enum SettingEnum: string
     case RENEWAL_NOTIFICATION_ON_DEMAND_MIN_HOURS = 'renewal_notification_on_demand_min_hours';
     case LOG_CLEANUP_ENABLED = 'log_cleanup_enabled';
     case LOG_CLEANUP_DAYS_AFTER = 'log_cleanup_days_after';
+    case TOKEN_EARNING_ENABLED = 'token_earning_enabled';
+    case TOKEN_EARNING_AD_AMOUNT = 'token_earning_ad_amount';
+    case TOKEN_EARNING_AD_COOLDOWN_MINUTES = 'token_earning_ad_cooldown_minutes';
+    case TOKEN_EARNING_DISCORD_AMOUNT = 'token_earning_discord_amount';
+    case TOKEN_EARNING_DISCORD_SERVER_ID = 'token_earning_discord_server_id';
+    case TOKEN_EARNING_TASK_AMOUNT = 'token_earning_task_amount';
+    case DISCORD_CLIENT_ID = 'discord_client_id';
+    case DISCORD_CLIENT_SECRET = 'discord_client_secret';
+    case DISCORD_BOT_TOKEN = 'discord_bot_token';
 }
