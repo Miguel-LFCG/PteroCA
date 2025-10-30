@@ -8,6 +8,7 @@ use App\Core\Controller\Panel\Setting\PaymentSettingCrudController;
 use App\Core\Controller\Panel\Setting\PterodactylSettingCrudController;
 use App\Core\Controller\Panel\Setting\SecuritySettingCrudController;
 use App\Core\Controller\Panel\Setting\ThemeSettingCrudController;
+use App\Core\Controller\Panel\Setting\TokenEarningSettingCrudController;
 use App\Core\Entity\Category;
 use App\Core\Entity\EmailLog;
 use App\Core\Entity\Log;
@@ -17,6 +18,7 @@ use App\Core\Entity\Payment;
 use App\Core\Entity\Product;
 use App\Core\Entity\Server;
 use App\Core\Entity\ServerLog;
+use App\Core\Entity\TokenEarningLog;
 use App\Core\Entity\User;
 use App\Core\Entity\Voucher;
 use App\Core\Entity\VoucherUsage;
@@ -104,6 +106,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute($this->translator->trans('pteroca.crud.menu.my_servers'), 'fa fa-server', 'servers');
         yield MenuItem::linkToRoute($this->translator->trans('pteroca.crud.menu.shop'), 'fa fa-shopping-cart', 'store');
         yield MenuItem::linkToRoute($this->translator->trans('pteroca.crud.menu.wallet'), 'fa fa-wallet', 'recharge_balance');
+        yield MenuItem::linkToRoute($this->translator->trans('pteroca.crud.menu.earn_tokens'), 'fa fa-coins', 'earn_tokens');
         yield MenuItem::subMenu($this->translator->trans('pteroca.crud.menu.my_account'), 'fa fa-user')->setSubItems([
             MenuItem::linkToCrud($this->translator->trans('pteroca.crud.menu.payments'), 'fa fa-money', UserPayment::class),
             MenuItem::linkToCrud($this->translator->trans('pteroca.crud.menu.account_settings'), 'fa fa-user-cog', UserAccount::class),
@@ -122,6 +125,7 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud($this->translator->trans('pteroca.crud.menu.logs'), 'fa fa-bars-staggered', Log::class),
                 MenuItem::linkToCrud($this->translator->trans('pteroca.crud.menu.email_logs'), 'fa fa-envelope', EmailLog::class),
                 MenuItem::linkToCrud($this->translator->trans('pteroca.crud.menu.server_logs'), 'fa fa-bars', ServerLog::class),
+                MenuItem::linkToCrud($this->translator->trans('pteroca.crud.menu.token_earning_logs'), 'fa fa-coins', TokenEarningLog::class),
             ]);
             yield MenuItem::subMenu($this->translator->trans('pteroca.crud.menu.settings'), 'fa fa-cogs')->setSubItems([
                 MenuItem::linkToUrl($this->translator->trans('pteroca.crud.menu.general'), 'fa fa-cog', $this->generateSettingsUrl(SettingContextEnum::GENERAL)),
@@ -130,6 +134,7 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToUrl($this->translator->trans('pteroca.crud.menu.payment_gateways'), 'fa fa-hand-holding-dollar', $this->generateSettingsUrl(SettingContextEnum::PAYMENT)),
                 MenuItem::linkToUrl($this->translator->trans('pteroca.crud.menu.email'), 'fa fa-envelope', $this->generateSettingsUrl(SettingContextEnum::EMAIL)),
                 MenuItem::linkToUrl($this->translator->trans('pteroca.crud.menu.appearance'), 'fa fa-brush', $this->generateSettingsUrl(SettingContextEnum::THEME)),
+                MenuItem::linkToUrl($this->translator->trans('pteroca.crud.menu.token_earning'), 'fa fa-coins', $this->generateSettingsUrl(SettingContextEnum::TOKEN_EARNING)),
             ]);
             yield MenuItem::linkToCrud($this->translator->trans('pteroca.crud.menu.users'), 'fa fa-user', User::class);
             yield MenuItem::subMenu($this->translator->trans('pteroca.crud.menu.vouchers'), 'fa fa-gifts')->setSubItems([
@@ -186,6 +191,7 @@ class DashboardController extends AbstractDashboardController
             SettingContextEnum::PAYMENT => PaymentSettingCrudController::class,
             SettingContextEnum::EMAIL => EmailSettingCrudController::class,
             SettingContextEnum::PTERODACTYL => PterodactylSettingCrudController::class,
+            SettingContextEnum::TOKEN_EARNING => TokenEarningSettingCrudController::class,
             default => GeneralSettingCrudController::class,
         };
 
